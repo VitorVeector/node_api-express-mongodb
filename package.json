@@ -1,0 +1,19 @@
+{
+  "name": "node_api-express-mongodb",
+  "version": "1.0.0",
+  "description": "Application to Study NodeJS API and MongoDB",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vitor",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.17.3"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.15"
+  }
+}
