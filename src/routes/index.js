@@ -1,13 +1,12 @@
 import express from 'express';
-import { BookController } from '../controllers/booksControlles.js';
 
-const routes = express.Router();
+import booksRoutes from './bookRoutes.js'
+import authorRoutes from './authorRoutes.js';
 
-// Aqui colocaremos todas as nossas rotas com seus meétodos de requisição
-routes.get('/books', BookController.getAllBooks);
-routes.get('/books/:id', BookController.getBook);
-routes.post('/books', BookController.postBook);
-routes.put('/books/:id', BookController.putBook);
-routes.delete('/books/:id', BookController.deleteBook);
+const router = express.Router();
 
-export default routes;
+router.use(express.json());
+router.use('/books', booksRoutes);
+router.use('/authors', authorRoutes);
+
+export default router;

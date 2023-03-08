@@ -7,17 +7,19 @@ const bookShema = new mongoose.Schema({
         required: true
     },
     author: {
+        type: mongoose.Schema.Types.ObjectId, // adiciona referência ao modelo de autor
+        ref: 'Author', // nome do modelo de autor referenciado
+        required: true
+    },
+    publisher: {
         type: String,
         required: true
     },
-    pb: {
-        type: String,
-        required: false
-    },
     pagesNumber: {
-        type: Number
+        type: Number,
+        default: 0
     }
-})
+}, {versionKey: false})
 
 
-export const books = mongoose.model('books', bookShema)
+export const Books = mongoose.model('Books', bookShema)

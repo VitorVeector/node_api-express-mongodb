@@ -1,14 +1,17 @@
-import { books } from '../models/Book.js';
+import { Books } from '../models/Book.js';
 
 export class BookController {
     static getAllBooks = (req, res) => {
-        books.find()
-            .then((books) => res.status(200).json(books))
-            .catch((err) => res.status(500).json({ error: err.message }));
+        Books.find().populate('author').then((books) => {
+            res.status(200).json(books);
+        }).catch((err) => {
+            res.status(500).json({ error: err.message });
+        });
     }
 
     static getBook = (req, res) => {
-        books.findById(req.params.id)
+        Books.findById(req.params.id)
+            .populate('author')
             .then(book => {
                 if(!book){
                     res.status(404).send('Livro nao encontrado')
@@ -16,15 +19,17 @@ export class BookController {
                     res.status(200).json(book)
                 }
             })
+            .catch((err) => res.status(500).json({ error: err.message }));
     }
 
     static postBook = (req, res) => {
-        const { title, author, description } = req.body;
+        const { title, author, publisher, pagesNumber } = req.body;
 
-        const newBook = new books({
+        const newBook = new Books({
             title,
             author,
-            description
+            publisher,
+            pagesNumber
         });
 
         newBook.save()
@@ -34,7 +39,7 @@ export class BookController {
 
     static putBook = (req, res) => {
         const bookUpdated = req.body
-        const attBook = books.findByIdAndUpdate(req.params.id, bookUpdated, { new: true })
+        const attBook = Books.findByIdAndUpdate(req.params.id, bookUpdated, { new: true })
         attBook
             .then(newBook => {
                 if (!newBook) {
@@ -47,13 +52,26 @@ export class BookController {
     }
 
     static deleteBook = (req, res) => {
-        books.findByIdAndDelete(req.params.id)
+        Books.findByIdAndDelete(req.params.id)
         .then(deletedBook => {
             if(!deletedBook){
                 res.status(404).send('Livro nao encontrado');
             } else {
-                res.status(200).send('Livro deleteado com sucesso');
+                res.status(200).send('Livro deleteado');
             }
         })
+    }
+
+    static getBookByPublisher = (req, res) => {
+        const publisher = req.query.publisher
+        Books.findOne({ publisher: publisher })
+            .then(book => {
+                if(!book){
+                    res.status(404).send('livro não encontrado')
+                } else {
+                    res.status(200).json(book)
+                }
+            })
+            .catch(err => res.status(500).json({error: err.message}))
     }
 }
